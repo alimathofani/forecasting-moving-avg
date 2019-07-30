@@ -29,7 +29,7 @@ class HomeController extends Controller
 
     public function result()
     {
-        $transaction = Transaction::get(['id', 'type', 'periode', 'total', 'added_on'])->groupBy('added_on');
+        $transaction = Transaction::where('user_id', auth()->id())->get(['id', 'type', 'periode', 'total', 'added_on'])->groupBy('added_on');
         
         $periode = 3;
 
