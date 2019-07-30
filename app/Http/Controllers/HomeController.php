@@ -30,7 +30,12 @@ class HomeController extends Controller
     public function result()
     {
         $transaction = Transaction::where('user_id', auth()->id())->get(['id', 'type', 'periode', 'total', 'added_on'])->groupBy('added_on');
-        
+
+        if (!$transaction->count()) {
+            return back();
+        }
+
+
         $periode = 3;
 
         foreach ($transaction as $key => $master) {
