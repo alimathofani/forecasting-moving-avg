@@ -44,11 +44,11 @@
                                             <div class="input-group-prepend">
                                                 <div class="input-group-text periodeText">Bulan</div>
                                             </div>
-                                            <input type="number"  min="1" class="form-control periodeField" required name="periode[]">
+                                            <input type="number" min="1" class="form-control periodeField" required name="periode[]">
                                         </div>
                                     </th>
                                     <td colspan="2">
-                                        <input type="text" class="form-control totalField" placeholder="Total" aria-label="Total" required name="total[]">
+                                        <input type="number" min="1" class="form-control totalField" placeholder="Total" aria-label="Total" required name="total[]">
                                     </td>
                                 </tr> 
                                 @endfor    
