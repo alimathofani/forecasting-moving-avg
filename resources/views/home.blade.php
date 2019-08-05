@@ -7,11 +7,19 @@
 <div class="container">
     <div class="row justify-content-center">
 
-        <div class="col-md-8">
+        <div class="col-md-9">
             <form method="post" action="{{ route('home.store') }}">
                 @csrf
                 <div class="card">
-                    <div class="card-header">Forecasting Moving Average</div>
+                    <div class="card-header">Forecasting Moving Average 
+                        <span class="float-right">
+                            <select class="form-control" name="item_id" required>
+                                <option value="">Pilih Barang</option>
+                                @foreach($items as $key => $item)
+                                    <option @if (old('unit') == $item) selected="selected" @endif value="{{ $key }}">{{ $item }}</option>
+                                @endforeach
+                            </select>
+                        </span> </div>
 
                     <div class="card-body">
                         

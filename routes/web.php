@@ -20,3 +20,9 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::post('/home', 'HomeController@store')->name('home.store');
 Route::get('/result', 'HomeController@result')->name('result.index');
+
+Route::get('/hasil', 'HomeController@hasil')->name('hasil.index');
+Route::get('/hasil/{group}/forecasting', 'HomeController@detail')->name('detail.index');
+Route::delete('/hasil/{group}', 'HomeController@deleteDetail')->name('delete_detail.destroy');
+
+Route::resource('/items', 'ItemController', ['except' => ['show']]);

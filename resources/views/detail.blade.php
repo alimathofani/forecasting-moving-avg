@@ -6,11 +6,11 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
+        <h2>Forecasting Moving Average</h2>
         @foreach($forecasting as $key => $data)
-        <div class="col-md-11">
+        <div class="col-md-12">
             <div class="card">
-                {{ $data['item']['name'] }}
-                <div class="card-header">Forecasting Moving Average <span class="float-right"># {{ $key }}</span></div>
+                <div class="card-header">{{ $data['item']['name'] }} <span class="float-right"># {{ $key }}</span></div>
 
                 <div class="card-body">
                     <table class="table table-hover">

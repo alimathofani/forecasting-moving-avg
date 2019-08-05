@@ -14,7 +14,8 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"/>
+    {{-- <link rel="stylesheet" href="{{ asset('css/app.css') }}"/> --}}
     @yield('styles')
 </head>
 <body>
@@ -30,12 +31,15 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
+                    <ul class="navbar-nav mr-auto ">
                         <li class="nav-item ">
-                            <a class="nav-link" href="{{ route('home') }}">{{ __('Home') }}</a>
+                            <a class="nav-link {{ request()->is('home') ? 'active' : '' }}" href="{{ route('home') }}">{{ __('Forecasting') }}</a>
                         </li>
                         <li class="nav-item ">
-                            <a class="nav-link" href="{{ route('result.index') }}">{{ __('Result Forecasting') }}</a>
+                            <a class="nav-link {{ request()->is('items') ? 'active' : '' }}" href="{{ route('items.index') }}">{{ __('Master Barang') }}</a>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link {{ request()->is('hasil') ? 'active' : '' }}" href="{{ route('hasil.index') }}">{{ __('Hasil') }}</a>
                         </li>
                     </ul>
 
@@ -44,16 +48,16 @@
                         <!-- Authentication Links -->
                         @guest
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                <a class="nav-link {{ request()->is('login') ? 'active' : '' }}" href="{{ route('login') }}">{{ __('Login') }}</a>
                             </li>
                             @if (Route::has('register'))
-                                <li class="nav-item">
+                                <li class="nav-item {{ request()->is('register') ? 'active' : '' }}">
                                     <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
                                 </li>
                             @endif
                         @else
                             <li class="nav-item">
-                                <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                <a class="nav-link " href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }} <span class="caret"></span>
                                 </a>
                             </li>
@@ -75,11 +79,19 @@
         </nav>
 
         <main class="py-4">
+            
+            <div class="row justify-content-center">
+                <div class="col-md-9">
+                    @include('include.flash-message')
+                </div>
+            </div>
+        
             @yield('content')
         </main>
     </div>
 
-<script src="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js')}}"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
 @yield('scripts')
 </body>

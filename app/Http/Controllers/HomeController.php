@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Transaction;
+use App\Item;
 
 class HomeController extends Controller
 {
@@ -24,28 +25,89 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $items = Item::orderBy('id', 'ASC')->pluck('name','id');
+
+        return view('home', compact([
+            'items'
+        ]));
     }
 
     public function result()
     {
-        $transaction = Transaction::where('user_id', auth()->id())->get(['id', 'type', 'periode', 'total', 'added_on'])->groupBy('added_on');
+        $transaction = Transaction::where('user_id', auth()->id())->with(['item'])->get(['id', 'type', 'user_id', 'item_id', 'periode', 'total', 'added_on'])->groupBy('added_on');
 
         if (!$transaction->count()) {
             return back();
         }
-
 
         $periode = 3;
 
         foreach ($transaction as $key => $master) {
             $forecasting[$key]['forecasting'] = $this->forecastingMethod($master,$periode);
             $forecasting[$key]['master']      = $master->toArray();
+            $forecasting[$key]['item']        = $master->first()->item;
         }
 
-        // dd($forecasting);
-
         return view('result', compact(
+            [
+                'forecasting',
+                'periode'
+            ]
+        ));
+    }
+
+    public function hasil()
+    {
+        $transaction = Transaction::where('user_id', auth()->id())
+            ->with([
+                'item'
+            ])
+            ->get([
+                'id', 
+                'type', 
+                'user_id', 
+                'item_id', 
+                'periode', 
+                'total', 
+                'added_on'
+            ])
+            ->groupBy('added_on');
+
+        return view('hasil', compact('transaction'))->with('i', '0');
+
+    }
+
+    public function detail($group)
+    {
+        $transaction = Transaction::where('user_id', auth()->id())
+            ->where('added_on', $group)
+            ->with([
+                'item'
+            ])
+            ->get([
+                'id', 
+                'type', 
+                'user_id', 
+                'item_id', 
+                'periode', 
+                'total', 
+                'added_on'
+            ])
+            ->groupBy('added_on');
+
+        if (!$transaction->count()) {
+            return back();
+        }
+
+        $periode = 3;
+
+        foreach ($transaction as $key => $master) {
+            $forecasting[$key]['forecasting'] = $this->forecastingMethod($master,$periode);
+            $forecasting[$key]['master']      = $master->toArray();
+            $forecasting[$key]['item']        = $master->first()->item;
+        }
+
+        return view('detail', compact(
             [
                 'forecasting',
                 'periode'
@@ -58,11 +120,13 @@ class HomeController extends Controller
         $dataType          = $request->type;
         $dataPeriode       = $request->periode;
         $dataTotal         = $request->total;
+        $dataItem          = $request->item_id;
         $dataAdded         = time();
 
         for ($i=0; $i < count($dataTotal); $i++) { 
             $transaction = Transaction::create([
                 'user_id'  => auth()->id(),
+                'item_id'  => $dataItem,
                 'type'     => $dataType,
                 'periode'  => $dataPeriode[$i],
                 'total'    => $dataTotal[$i],
@@ -70,7 +134,7 @@ class HomeController extends Controller
             ]);
         }
 
-        return back();
+        return back()->with('success','Forecasting Moving Average Created!');
     }
 
     private function forecastingMethod($master, $periode)
@@ -157,6 +221,17 @@ class HomeController extends Controller
             'ema' => $ema,
 
         ];
+    }
+
+    public function deleteDetail($id)
+    {
+        $transactions = Transaction::where('added_on', $id)->where('user_id', auth()->id())->get();
+        
+        foreach ($transactions as $transaction) {
+            $transaction->delete();
+        }
+
+        return back()->with('success', 'DELETED !');
     }
 
     
