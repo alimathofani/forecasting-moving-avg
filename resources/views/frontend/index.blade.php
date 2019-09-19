@@ -19,7 +19,7 @@
         </div>
   
         <div class="col-md-6 intro-img order-md-last order-first">
-          <img src="{{ asset('frontend/img/intro-img.svg') }}" alt="" class="img-fluid">
+          <img src="{{ asset('frontend/img/undraw_growth_analytics_8btt.svg') }}" alt="" class="img-fluid">
         </div>
       </div>
 
