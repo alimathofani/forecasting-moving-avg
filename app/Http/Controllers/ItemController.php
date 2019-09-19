@@ -7,9 +7,13 @@ use App\Item;
 
 class ItemController extends Controller
 {
+    public function __construct()
+    {
+    }
+
     public function index()
     {
-    	$items = Item::orderBy('id','ASC')->get();
+    	$items = Item::where('user_id', auth()->id() )->orderBy('id','ASC')->get();
     	return view('items.index', compact('items'))->with('i', '0');
     }
 
@@ -20,7 +24,8 @@ class ItemController extends Controller
         ]);
 
     	Item::create([
-    		'name' => $request->name
+            'user_id' => auth()->id(),
+            'name' => $request->name,
     	]);
 
     	return back()->with('success','Master Barang Created!');;
@@ -35,7 +40,9 @@ class ItemController extends Controller
     {
     	$request->validate([
     	            'name' => 'required',
-    	        ]);
+                ]);
+
+        $request->request->add(['user_id' => auth()->id()]);
 
     	$item->update($request->all());
 

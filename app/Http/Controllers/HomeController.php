@@ -5,30 +5,30 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Transaction;
 use App\Item;
+use App\Setting;
 
 class HomeController extends Controller
 {
+    protected $period;
+    protected $items;
     /**
      * Create a new controller instance.
      *
      * @return void
      */
     public function __construct()
-    {
-        $this->middleware('auth');
+    {        
+        $this->period = Setting::where('name', 'periodDivider')->value('value');
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
     public function index()
     {
-        $items = Item::orderBy('id', 'ASC')->pluck('name','id');
+        $items = Item::where('user_id', auth()->id())->orderBy('id', 'ASC')->pluck('name','id');
+        $periode = $this->period;
 
         return view('home', compact([
-            'items'
+            'items',
+            'periode'
         ]));
     }
 
@@ -40,7 +40,7 @@ class HomeController extends Controller
             return back();
         }
 
-        $periode = 3;
+        $periode = $this->period;
 
         foreach ($transaction as $key => $master) {
             $forecasting[$key]['forecasting'] = $this->forecastingMethod($master,$periode);
@@ -56,7 +56,7 @@ class HomeController extends Controller
         ));
     }
 
-    public function hasil()
+    public function hasilx()
     {
         $transaction = Transaction::where('user_id', auth()->id())
             ->with([
@@ -99,7 +99,7 @@ class HomeController extends Controller
             return back();
         }
 
-        $periode = 3;
+        $periode = $this->period;
 
         foreach ($transaction as $key => $master) {
             $forecasting[$key]['forecasting'] = $this->forecastingMethod($master,$periode);
@@ -113,6 +113,95 @@ class HomeController extends Controller
                 'periode'
             ]
         ));
+    }
+
+    public function hasil()
+    {
+        return view('detail2', compact(
+            [
+                'forecasting',
+                'periode'
+            ]
+        ));
+    }
+
+    public function apiResult()
+    {
+        $transaction = Transaction::where('user_id', auth()->id())
+            // ->where('added_on', $group)
+            ->with([
+                'item'
+            ])
+            ->get([
+                'id', 
+                'type', 
+                'user_id', 
+                'item_id', 
+                'periode', 
+                'total', 
+                'added_on'
+            ])
+            ->groupBy('added_on');
+        
+        if (!$transaction->count()) {
+            return back();
+        }
+
+        $periode = $this->period;
+        $i = 0;
+        foreach ($transaction as $key => $master) {
+            $forecasting[$i]['unique'] = $key;
+            $forecasting[$i]['forecasting'] = $this->forecastingMethod($master,$periode);
+            $forecasting[$i]['master']      = $master->toArray();
+            $forecasting[$i]['item']        = $master->first()->item->name;
+            $i++;
+        }
+
+        return response()->json([
+            'data' => $forecasting,
+            'periode' => $periode
+        ]);
+    }
+
+    public function apiDetail(Request $request)
+    {
+        $transaction = Transaction::where('user_id', auth()->id())
+            ->where('added_on', $request->unique)
+            ->with([
+                'item'
+            ])
+            ->get([
+                'id', 
+                'type', 
+                'user_id', 
+                'item_id', 
+                'periode', 
+                'total', 
+                'added_on'
+            ])
+            ->groupBy('added_on');
+        
+        if (!$transaction->count()) {
+            return response()->json([
+                'data' => false,
+            ]);
+        }
+
+        $periode = $this->period;
+        $i = 0;
+        foreach ($transaction as $key => $master) {
+            $forecasting[$i]['unique'] = $key;
+            $forecasting[$i]['forecasting'] = $this->forecastingMethod($master,$periode);
+            $forecasting[$i]['master']      = $master->toArray();
+            $forecasting[$i]['item']        = $master->first()->item->name;
+            $i++;
+        }
+
+        return response()->json([
+            'data' => $forecasting,
+            'periode' => $periode
+        ]);
+
     }
 
     public function store(Request $request)
@@ -219,6 +308,7 @@ class HomeController extends Controller
             'dataAverage' => $dataAverage,
             'resultTotal' => $resultTotal,
             'ema' => $ema,
+            'ema_end' => end($ema)
 
         ];
     }

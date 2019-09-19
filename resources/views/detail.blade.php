@@ -4,7 +4,7 @@
 @endsection
 
 @section('content')
-<div class="container">
+<div class="container-fluid">
     <div class="row justify-content-center">
         <h2>Forecasting Moving Average</h2>
         @foreach($forecasting as $key => $data)
