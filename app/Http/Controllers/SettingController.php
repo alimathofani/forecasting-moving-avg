@@ -13,7 +13,7 @@ class SettingController extends Controller
 
     public function index()
     {
-        $settings = Setting::where('status', true)->get();
+        $settings = Setting::where('user_id', auth()->id())->where('status', true)->get();
     	return view('setting.index', compact('settings'))->with('i', '0');
     }
 

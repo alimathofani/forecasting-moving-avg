@@ -18,13 +18,22 @@ class HomeController extends Controller
      */
     public function __construct()
     {        
-        $this->period = Setting::where('name', 'periodDivider')->value('value');
+        $this->middleware(function ($request, $next) {
+            
+            $this->period = Setting::where('user_id', auth()->id())->where('name', 'periodDivider')->value('value');
+
+            return $next($request);
+        });
     }
 
     public function index()
     {
-        $items = Item::where('user_id', auth()->id())->orderBy('id', 'ASC')->pluck('name','id');
         $periode = $this->period;
+        
+        if($periode == null) return redirect()->route('settings.index');
+        
+        $items = Item::where('user_id', auth()->id())->orderBy('id', 'ASC')->pluck('name','id');
+        
 
         return view('home', compact([
             'items',
@@ -144,7 +153,9 @@ class HomeController extends Controller
             ->groupBy('added_on');
         
         if (!$transaction->count()) {
-            return back();
+            return response()->json([
+                'data' => false
+            ]);
         }
 
         $periode = $this->period;
