@@ -12,8 +12,8 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('frontend.index');
+})->name('frontend.index');
 Route::get('/test', function(){
     return view('test.index');
 });

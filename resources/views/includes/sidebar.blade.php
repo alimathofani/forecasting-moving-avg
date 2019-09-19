@@ -65,7 +65,7 @@
     <hr class="sidebar-divider d-none d-md-block">
     <!-- Nav Item - Tables -->
     <li class="nav-item">
-        <a class="nav-link" href="#" data-toggle="modal" data-target="#logoutModal"">
+        <a class="nav-link" href="#" data-toggle="modal" data-target="#logoutModal">
         <i class="fas fa-fw fa-sign-out-alt"></i>
         <span>Logout</span></a>
     </li>

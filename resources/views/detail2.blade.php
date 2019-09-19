@@ -20,10 +20,39 @@
                         <th>MAD</th>
                         <th>MSE</th>
                         <th>MAPE</th>
+                        <th>ACTION</th>
                     </tr>
                     </thead>
                 </table>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Logout Modal-->
+<div class="modal fade" id="deleteAction" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+            <a class="btn btn-primary" href="{{ route('logout') }}"
+                onclick="event.preventDefault();
+                                document.getElementById('logout-form').submit();">
+                {{ __('Logout') }}
+            </a>
+            
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
+
+        </div>
         </div>
     </div>
 </div>
@@ -218,7 +247,16 @@ $(document).ready(function() {
             { data: "forecasting.ema_end" },
             { data: "forecasting.dataAverage.averageAbs.value" },
             { data: "forecasting.dataAverage.averageSquared.value" },
-            { data: "forecasting.dataAverage.averageAbsPercent.value" }
+            { data: "forecasting.dataAverage.averageAbsPercent.value" },
+            {
+                orderable:      false,
+                data: 'unique',
+                render: function (data, type, row, meta) {
+                    var url = '{{ route('delete_detail.destroy', ":id") }}';
+                    url = url.replace(':id', data);
+                    return '<form action="'+url+'" method="post" style="display: inline;" class="float-right" >@csrf @method('DELETE')<input type="submit" value="Delete" class="btn btn-danger" ></form>';
+                }
+            },
         ],
         order: [[1, 'asc']]
     } );
@@ -243,7 +281,6 @@ $(document).ready(function() {
             
         }
     } );
-
     
 } );
 

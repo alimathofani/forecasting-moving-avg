@@ -56,11 +56,11 @@
                                     <div class="input-group-prepend">
                                         <div class="input-group-text periodeText">Bulan</div>
                                     </div>
-                                    <input type="number" min="1" class="form-control periodeField" required name="periode[]" value='{{ $sort++ }}'>
+                                    <input type="number" min="1" class="form-control periodeField" required name="periode[]" {{-- value='{{ $sort++ }}' --}}>
                                 </div>
                             </th>
                             <td colspan="2">
-                                <input type="number" min="1" class="form-control totalField" placeholder="Total" aria-label="Total" required name="total[]" value='{{ rand(400,500) }}'>
+                                <input type="number" min="1" class="form-control totalField" placeholder="Total" aria-label="Total" required name="total[]" {{--  value='{{ rand(400,500) }}' --}}>
                             </td>
                         </tr> 
                         @endfor    
