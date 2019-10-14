@@ -1,6 +1,6 @@
 # Forecasting Moving Average
 
-This is ScriptSweet
+This is ScriptSweets
 
 ##### 1. Clone this project from git and install dependencies:
 ```sh
