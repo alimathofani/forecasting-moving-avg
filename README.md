@@ -40,11 +40,26 @@ php artisan migrate --seed
 # run server
 php artisan serve # akses di domain 
 ```
-<http://127.0.0.1:8000>
+access link <http://127.0.0.1:8000>
+
 
 ##### Note *
-``` # ```
-tanda ini untuk command prompt
-<br>
-` ### `
-tanda ini untuk isian config 
+` # ` tanda ini untuk command prompt
+
+` ### `tanda ini untuk isian config 
+
+User Login
+```sh
+# Owner Role
+Email : owner@gmail.com
+password : secret
+
+# Admin Role
+Email : admin@gmail.com
+password : secret
+
+# sales Role
+Email : sales@gmail.com
+password : secret
+```
+
