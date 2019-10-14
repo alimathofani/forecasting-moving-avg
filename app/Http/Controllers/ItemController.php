@@ -7,13 +7,15 @@ use App\Item;
 
 class ItemController extends Controller
 {
-    public function __construct()
+    function __construct()
     {
+        $this->middleware('permission:item-list|item-create|item-delete|item-edit', ['only' => ['index']]);
+        $this->middleware('permission:item-delete', ['only' => ['destroy']]);
     }
 
     public function index()
     {
-    	$items = Item::where('user_id', auth()->id() )->orderBy('id','ASC')->get();
+    	$items = Item::orderBy('id','ASC')->get();
     	return view('items.index', compact('items'))->with('i', '0');
     }
 
@@ -53,6 +55,11 @@ class ItemController extends Controller
 
     public function destroy(Item $item)
     {
+        if ($item->transactions->count() > 0) {
+            return redirect()->route('items.index')
+                        ->with('error','Can\'t Deleted!');
+        }
+
     	$item->delete();
 
     	return redirect()->route('items.index')

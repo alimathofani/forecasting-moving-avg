@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
   <meta charset="utf-8">
-  <title>Forecasting</title>
+  <title>{{ config('app.name') }}</title>
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <meta content="" name="keywords">
   <meta content="" name="description">
@@ -53,8 +53,8 @@
 
       <div class="logo float-left">
         <!-- Uncomment below if you prefer to use an image logo -->
-        <h1 class="text-light"><a href="#intro" class="scrollto"><span>Forecasting</span></a></h1>
-        <!-- <a href="#header" class="scrollto"><img src="img/logo.png" alt="" class="img-fluid"></a> -->
+        <h1 class="text-light"><a href="#intro" class="scrollto"><span>CV. MITRA BARU</span></a></h1>
+        {{-- <a href="#header" class="scrollto"><img src="img/logo.png" alt="" class="img-fluid"></a>  --}}
       </div>
 
       <nav class="main-nav float-right d-none d-lg-block">
@@ -62,7 +62,7 @@
             @if (Route::has('login'))
             <li class="active"><a href="{{ route('frontend.index') }}">{{ __('Home') }}</a></li>
                 @auth
-                <li><a href="{{ route('home') }}">{{ __('Dashboards') }}</a></li>
+                <li><a href="{{ route('forecasting.index') }}">{{ __('Dashboards') }}</a></li>
                 <li>
                     <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

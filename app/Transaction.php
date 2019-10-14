@@ -8,12 +8,20 @@ use App\Item;
 class Transaction extends Model
 {
     protected $fillable = [
-        'user_id', 'item_id', 'type', 'periode', 'total', 'added_on'
+        'template_id', 
+        'type', 
+        'periode', 
+        'total'
     ];
 
 	public function item()
     {
     	return $this->belongsTo(Item::class, 'item_id', 'id');
+    }
+
+    public function template()
+    {
+        return $this->belongsTo(Template::class);
     }
 
 }

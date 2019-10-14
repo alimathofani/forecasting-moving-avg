@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -9,7 +8,7 @@
     <meta name="author" content="">
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>SB Admin 2 - Dashboard</title>
+    <title>{{ config('app.name') }}</title>
 
     <!-- Custom fonts for this template-->
     <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
@@ -34,7 +33,11 @@
             <!-- Main Content -->
             <div id="content">
                 @include('includes.topbar')
-                @include('includes.flash-message')
+                <div class="row justify-content-center">
+                    <div class="col-md-11">
+                        @include('includes.flash-message')
+                    </div>
+                </div>
                 @yield('content')
             </div>
 

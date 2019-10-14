@@ -11,36 +11,30 @@
 |
 */
 
-Route::get('/', function () {
-    return view('frontend.index');
-})->name('frontend.index');
-Route::get('/test', function(){
-    return view('test.index');
-});
-Route::get('/regx', function(){
-    return view('auth.registerx');
-});
+Route::get('/', 'FrontController@index')->name('frontend.index');
 
 Auth::routes();
+
 Route::group([
     'middleware'    => ['auth']
     ], function () {
-        Route::get('/home', 'HomeController@index')->name('home');
-        Route::post('/home', 'HomeController@store')->name('home.store');
-        Route::get('/result', 'HomeController@result')->name('result.index');
-
-        Route::get('/hasil', 'HomeController@hasil')->name('hasil.index');
-        Route::get('/hasil/{group}/forecasting', 'HomeController@detail')->name('detail.index');
         
-        Route::get('/hasil2/{group}/forecasting', 'HomeController@detail2')->name('detail.index');
-        Route::get('/api-hasil', 'HomeController@apiResult')->name('api.result');
-        Route::get('/api-hasil-detail', 'HomeController@apiDetail')->name('api.detail');
+        Route::get('/forecasting', 'ForecastingController@index')->name('forecasting.index');
+        Route::post('/forecasting', 'ForecastingController@store')->name('forecasting.store');
 
-        Route::delete('/hasil/{group}', 'HomeController@deleteDetail')->name('delete_detail.destroy');
+        Route::get('/results', 'ResultController@index')->name('result.index');
+        Route::get('/results/all', 'ResultController@list')->name('result.list');
+        Route::get('/results/details', 'ResultController@show')->name('result.show');
+        Route::delete('/results/{group}/delete', 'ResultController@delete')->name('result.destroy');
+    }
+);
 
-        Route::resource('/items', 'ItemController', ['except' => ['show']]);
-
+Route::group([
+    'middleware'    => ['auth', 'role:owner|admin']
+    ], function () {
         Route::resource('/settings', 'SettingController', ['except' => ['show','store','create','destroy']]);
-        Route::post('/settings', 'SettingController@generate')->name('settings.generate');
+        Route::resource('/items', 'ItemController', ['except' => ['show']]);
+        Route::resource('users','UserController');
+        Route::resource('roles','RoleController');
     }
 );

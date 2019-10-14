@@ -9,11 +9,11 @@
     <!-- Divider -->
     <hr class="sidebar-divider my-0">
 
-    <!-- Nav Item - Dashboard -->
-    <li class="nav-item ">
-        <a class="nav-link" href="{{ url('/') }}">
+    <!-- Nav Item - Tables -->
+    <li class="nav-item {{ request()->is('forecasting') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('forecasting.index') }}">
         <i class="fas fa-fw fa-poll"></i>
-        <span>Dashboard</span></a>
+        <span>Forecasting</span></a>
     </li>
 
     <!-- Divider -->
@@ -21,24 +21,17 @@
 
     <!-- Heading -->
     <div class="sidebar-heading">
-        Interface
+        Report
     </div>
 
-    <!-- Nav Item - Tables -->
-    <li class="nav-item {{ request()->is('home') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('home') }}">
-        <i class="fas fa-fw fa-chart-line"></i>
-        <span>Forecasting</span></a>
-    </li>
-
      <!-- Nav Item - Tables -->
-     <li class="nav-item {{ request()->is('hasil') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('hasil.index') }}">
+     <li class="nav-item {{ request()->is('results') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('result.index') }}">
         <i class="fas fa-fw fa-diagnoses"></i>
-        <span>Hasil</span></a>
+        <span>List Hasil Akhir</span></a>
     </li>
-    
 
+    @role('owner,admin')
     <!-- Divider -->
     <hr class="sidebar-divider">
 
@@ -46,6 +39,22 @@
     <div class="sidebar-heading">
         Pengaturan
     </div>
+
+    @role('owner')
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
+            <i class="fas fa-fw fa-user-friends"></i>
+            <span>User Management</span>
+        </a>
+        <div id="collapsePages" class="collapse 
+        {{ request()->is('users') || request()->is('users/*') || request()->is('roles') || request()->is('roles/*') ? 'show' : '' }}" aria-labelledby="headingPages" data-parent="#accordionSidebar" style="">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item {{ request()->is('users') || request()->is('users/*') ? 'active' : '' }}" href="{{ route('users.index') }}">Master User </a>
+                <a class="collapse-item {{ request()->is('roles') || request()->is('roles/*')? 'active' : '' }}" href="{{ route('roles.index') }}">Master Role</a>
+            </div>
+        </div>
+    </li>
+    @endrole
 
     <!-- Nav Item - Tables -->
     <li class="nav-item {{ request()->is('items') ? 'active' : '' }}">
@@ -58,8 +67,9 @@
     <li class="nav-item {{ request()->is('settings') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('settings.index') }}">
         <i class="fas fa-fw fa-wrench"></i>
-        <span>Periode</span></a>
+        <span>Pengaturan</span></a>
     </li>
+    @endrole
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">

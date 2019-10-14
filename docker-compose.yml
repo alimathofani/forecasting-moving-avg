@@ -49,7 +49,6 @@ services:
   #Alternative Service
   adminer:
     image: adminer
-    restart: always
     ports:
         - 8086:8080
     environment:

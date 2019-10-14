@@ -7,32 +7,19 @@ use App\Setting;
 
 class SettingController extends Controller
 {
-    public function __construct()
+    function __construct()
     {
+        $this->middleware('permission:setting-list', ['only' => ['index']]);
+        $this->middleware('permission:setting-show', ['only' => ['show']]);
+        $this->middleware('permission:setting-create', ['only' => ['create','store']]);
+        $this->middleware('permission:setting-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:setting-delete', ['only' => ['destroy']]);
     }
 
     public function index()
     {
-        $settings = Setting::where('user_id', auth()->id())->where('status', true)->get();
+        $settings = Setting::all();
     	return view('setting.index', compact('settings'))->with('i', '0');
-    }
-
-    public function generate(Request $request)
-    {
-    	Setting::create([
-            'user_id' => auth()->id(),
-            'name' => 'periodDivider',
-            'value' => 10
-        ]);
-
-        Setting::create([
-            'user_id' => auth()->id(),
-            'name' => 'typeDivider',
-            'value' => 'month',
-            'status' => false
-        ]);
-
-    	return back()->with('success','Generated!');;
     }
 
     public function edit(Setting $setting)
@@ -42,20 +29,18 @@ class SettingController extends Controller
 
     public function update(Request $request, Setting $setting)
     {
-        $request->request->add(['user_id' => auth()->id()]);
+        $status = $request->status;
 
-    	$setting->update($request->all());
+        if($status){
+            $setting->status = true;
+        }else{
+            $setting->status = false;
+        }
+        
+    	$setting->save();
 
     	 return redirect()->route('settings.index')
                         ->with('success','Updated!');
 
     }
-
-    // public function destroy(Item $item)
-    // {
-    // 	$item->delete();
-
-    // 	return redirect()->route('items.index')
-    //                     ->with('success','Deleted!');
-    // }
 }
