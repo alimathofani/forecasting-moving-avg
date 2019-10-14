@@ -40,21 +40,21 @@
         Pengaturan
     </div>
 
-    @role('owner')
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-            <i class="fas fa-fw fa-user-friends"></i>
-            <span>User Management</span>
-        </a>
-        <div id="collapsePages" class="collapse 
-        {{ request()->is('users') || request()->is('users/*') || request()->is('roles') || request()->is('roles/*') ? 'show' : '' }}" aria-labelledby="headingPages" data-parent="#accordionSidebar" style="">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item {{ request()->is('users') || request()->is('users/*') ? 'active' : '' }}" href="{{ route('users.index') }}">Master User </a>
-                <a class="collapse-item {{ request()->is('roles') || request()->is('roles/*')? 'active' : '' }}" href="{{ route('roles.index') }}">Master Role</a>
+        @role('owner')
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
+                <i class="fas fa-fw fa-user-friends"></i>
+                <span>User Management</span>
+            </a>
+            <div id="collapsePages" class="collapse 
+            {{ request()->is('users') || request()->is('users/*') || request()->is('roles') || request()->is('roles/*') ? 'show' : '' }}" aria-labelledby="headingPages" data-parent="#accordionSidebar" style="">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <a class="collapse-item {{ request()->is('users') || request()->is('users/*') ? 'active' : '' }}" href="{{ route('users.index') }}">Master User </a>
+                    <a class="collapse-item {{ request()->is('roles') || request()->is('roles/*')? 'active' : '' }}" href="{{ route('roles.index') }}">Master Role</a>
+                </div>
             </div>
-        </div>
-    </li>
-    @endrole
+        </li>
+        @endrole
 
     <!-- Nav Item - Tables -->
     <li class="nav-item {{ request()->is('items') ? 'active' : '' }}">
@@ -63,12 +63,14 @@
         <span>Master Barang</span></a>
     </li>
 
-    <!-- Nav Item - Tables -->
-    <li class="nav-item {{ request()->is('settings') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('settings.index') }}">
-        <i class="fas fa-fw fa-wrench"></i>
-        <span>Pengaturan</span></a>
-    </li>
+        @role('owner')
+        <!-- Nav Item - Tables -->
+        <li class="nav-item {{ request()->is('settings') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('settings.index') }}">
+            <i class="fas fa-fw fa-wrench"></i>
+            <span>Pengaturan</span></a>
+        </li>
+        @endrole
     @endrole
 
     <!-- Divider -->
