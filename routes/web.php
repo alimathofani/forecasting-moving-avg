@@ -26,6 +26,9 @@ Route::group([
         Route::get('/results/all', 'ResultController@list')->name('result.list');
         Route::get('/results/details', 'ResultController@show')->name('result.show');
         Route::delete('/results/{group}/delete', 'ResultController@delete')->name('result.destroy');
+        Route::get('/sales', 'SaleController@index')->name('sales.index');
+        Route::post('/sales', 'SaleController@store')->name('sales.store');
+        Route::get('/sales/calculate', 'SaleController@calculate')->name('sales.calculate');
     }
 );
 

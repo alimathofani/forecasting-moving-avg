@@ -32,12 +32,13 @@
                             <div class="col">
                                 <div class="form-group">
                                     <label for="choose_item">Pilih Barang</label>
-                                    <select class="form-control" id="choose_item" name="item_id" required>
+                                    <select class="form-control" id="choose_item" required>
                                         <option value="">---</option>
                                         @foreach($items as $key => $item)
                                         <option @if (old('unit') == $item) selected="selected" @endif value="{{ $key }}">{{ $item }}</option>
                                         @endforeach
                                     </select>
+                                    <input type="hidden" name="item_id" id="item_id">
                                 </div>
                             </div>
 
@@ -128,8 +129,13 @@
 
 <script>
     $(document).ready(function() {
+        
+        $('#choose_item').change(function(){
+            $('#item_id').val($('#choose_item option:selected').val());
+            $(this).attr('disabled', true);
+        });
+        
         var checkDivider = '{{ $setDivider }}';
-
         if(!checkDivider){
             $("#forecastingForm :input").prop("disabled", true);
         }
@@ -158,6 +164,34 @@
                 wrapper[0].children[total_fields-1].remove();
             }
         });
+
+        $('[name^=periode]').focusout(function(){
+            var _this = $(this);
+            var value = _this.val();
+            var item_id = $('#item_id').val();
+            if(!item_id){
+                return alert('Pilih Barang Terlebih Dahulu');
+            }
+
+            if(value !== ''){
+                $.ajax({
+                    type:'GET',
+                    url:"{{ route('sales.calculate') }}",
+                    data:{
+                        date: value,
+                        item: item_id
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    dataType:'JSON',
+                    success:function(data){
+                        // data.total;
+                        _this.parent().parent().siblings().children().val(data.total);
+                    }
+                });
+            }
+        });
         
         $("#periode-select").change(function (test) {
             periode = test.currentTarget.value;
@@ -179,6 +213,10 @@
                         if (!animationCompleted) {
                             dp.el.readOnly = false
                         }
+                    },
+                    onSelect: function onSelect(fd, date) {
+                        // console.log(fd, date);
+                        // console.log($(this).parents().parents().parents().parents().parents());
                     }
                 });
             }else if(periode == "Tahun"){

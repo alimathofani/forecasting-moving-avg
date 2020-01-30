@@ -31,6 +31,18 @@
         <span>List Hasil Akhir</span></a>
     </li>
 
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Sales
+    </div>
+
+     <!-- Nav Item - Tables -->
+     <li class="nav-item {{ request()->is('sales') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('sales.index') }}">
+        <i class="fas fa-fw fa-diagnoses"></i>
+        <span>Nota</span></a>
+    </li>
+
     @role('owner,admin')
     <!-- Divider -->
     <hr class="sidebar-divider">
