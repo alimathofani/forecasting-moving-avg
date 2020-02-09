@@ -25,12 +25,6 @@
                         <div class="row">
                             <div class="col">
                                 <div class="form-group">
-                                    <label for="name">Nama Deskripsi</label>
-                                    <input type="text" class="form-control" id="divider" required name="name" id="name" placeholder="Nama Deskripsi">
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-group">
                                     <label for="choose_item">Pilih Barang</label>
                                     <select class="form-control" id="choose_item" required>
                                         <option value="">---</option>
@@ -44,17 +38,6 @@
 
                         </div>
                         <div class="row">
-                            <div class="col">
-                                <div class="form-group">
-                                    <label for="divider">Pembagi</label>
-                                    <div class="input-group mb-3">
-                                        <input type="number" min="3" class="form-control" id="divider" placeholder="3" value="3" name="divider">
-                                        <div class="input-group-append">
-                                            <span class="input-group-text"> / </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="col">
                                 <label for="periode-select">Tipe Periode  </label>
                                 <select size="1" id="periode-select" class="form-control" name="type">

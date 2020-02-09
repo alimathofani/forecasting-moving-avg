@@ -9,6 +9,7 @@ class Template extends Model
     protected $fillable = [
         'user_id',
         'item_id',
+        'confirm',
         'name',
     ];
 

@@ -25,7 +25,7 @@ class ResultController extends Controller
         if (auth()->user()->hasRole('owner','admin')) {
             $template = Template::with('transactions', 'item')->get();
         }else{
-            $template = Template::where('user_id', auth()->id())->with('transactions', 'item')->get();
+            $template = Template::where('confirm', 1)->with('transactions', 'item')->get();
         }
         
         if (!$template->count()) {
@@ -44,6 +44,9 @@ class ResultController extends Controller
             $forecasting[$i]['forecasting'] = $this->forecastingMethod($transactions,$setDivider);
             $forecasting[$i]['item']        = $item;
             $forecasting[$i]['divider']     = $setDivider;
+            $forecasting[$i]['status']['id']     = $data->id;
+            $forecasting[$i]['status']['user_id']     = $data->user_id;
+            $forecasting[$i]['status']['confirm']     = $data->confirm;
             $i++;
         }
 
@@ -95,6 +98,24 @@ class ResultController extends Controller
         $template->delete();
 
         return back()->with('success', 'DELETED !');
+    }
+
+    public function confirm(Request $request, $id)
+    {
+        if (auth()->user()->hasRole('owner','admin')) {
+            $template = Template::with('transactions')->find($id);
+        }else{
+            $template = Template::with('transactions')->where('user_id', auth()->id())->find($id);
+        }
+
+        if (!$template->count()) {
+            return back()->with('error', 'Not Found !');
+        }
+        
+        $template->confirm = 1;
+        $template->save();
+
+        return back()->with('success', 'Confirmed !');
     }
     
     protected function forecastingMethod($master, $periode)

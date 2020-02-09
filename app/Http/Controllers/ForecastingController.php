@@ -17,6 +17,9 @@ class ForecastingController extends Controller
 
     public function index()
     {
+        if (auth()->user()->hasRole('sales')) {
+            return redirect()->route('result.index');
+        }
         $items = Item::orderBy('id', 'ASC')->pluck('name','id');
         
         $setDivider = Setting::dividerActive()->value('id');
@@ -30,18 +33,16 @@ class ForecastingController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
             'type' => 'required',
-            'periode' => 'required',
-            'divider' => 'required',
+            'periode' => 'required'
         ]);
 
         $dataType          = $request->type;
-        $dataName          = $request->name;
+        $dataName          = time();
         $dataPeriode       = $request->periode;
         $dataTotal         = $request->total;
         $dataItem          = $request->item_id;
-        $dataDivider       = $request->divider;
+        $dataDivider       = 3;
         
         $settingDiv = Setting::where('name', 'forecasting-divider')->value('id');
 

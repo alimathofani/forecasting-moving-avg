@@ -6,6 +6,7 @@
         <div class="sidebar-brand-text mx-3">{{ config('app.name') }}</div>
     </a>
 
+    @role('owner,admin')
     <!-- Divider -->
     <hr class="sidebar-divider my-0">
 
@@ -15,7 +16,7 @@
         <i class="fas fa-fw fa-poll"></i>
         <span>Forecasting</span></a>
     </li>
-
+@endrole
     <!-- Divider -->
     <hr class="sidebar-divider">
 
@@ -30,7 +31,7 @@
         <i class="fas fa-fw fa-diagnoses"></i>
         <span>List Hasil Akhir</span></a>
     </li>
-
+    @role('owner,admin')
     <!-- Heading -->
     <div class="sidebar-heading">
         Sales
@@ -42,6 +43,7 @@
         <i class="fas fa-fw fa-diagnoses"></i>
         <span>Nota</span></a>
     </li>
+    @endrole
 
     @role('owner,admin')
     <!-- Divider -->

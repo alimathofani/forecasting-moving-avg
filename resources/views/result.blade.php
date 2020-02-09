@@ -15,13 +15,17 @@
                             <tr>
                                 <th><i class="fas fa-fw fa-plus"></i></th>
                                 <th>ID</th>
-                                <th>Deskripsi</th>
                                 <th>Barang</th>
                                 <th>EMA</th>
                                 <th>MAD</th>
                                 <th>MSE</th>
                                 <th>MAPE</th>
+                                @role('owner')
+                                <th>CONFIRM</th>
+                                @endrole
+                                @role('owner,admin')
                                 <th>ACTION</th>
+                                @endrole
                             </tr>
                             </thead>
                         </table>
@@ -68,12 +72,27 @@ $(document).ready(function() {
                 defaultContent: '<i class="fas fa-fw fa-plus-circle"></i>'
             },
             { data: "id" },
-            { data: "name" },
             { data: "item" },
             { data: "forecasting.ema_end" },
             { data: "forecasting.dataAverage.averageAbs.value" },
             { data: "forecasting.dataAverage.averageSquared.value" },
             { data: "forecasting.dataAverage.averageAbsPercent.value" },
+            @role('owner')
+            {
+                orderable:      false,
+                data: 'status',
+                render: function (data, type, row, meta) {
+                    var url = '{{ route('result.confirm', ":id") }}';
+                    url = url.replace(':id', data.id);
+                    if(data.confirm == 0){
+                        return '<form action="'+url+'" method="post" style="display: inline;" class="float-right" onclick="return confirm('+ "'Are you sure?'" + ')" >@csrf @method('POST')<input type="submit"     value="Confirm" class="btn btn-success" ></form>';
+                    }else{
+                        return 'Ya';
+                    }
+                }
+            },
+            @endrole
+            @role('owner')
             {
                 orderable:      false,
                 data: 'id',
@@ -83,6 +102,26 @@ $(document).ready(function() {
                     return '<form action="'+url+'" method="post" style="display: inline;" class="float-right" onclick="return confirm('+ "'Are you sure?'" + ')" >@csrf @method('DELETE')<input type="submit" value="Delete" class="btn btn-danger" ></form>';
                 }
             },
+            @endrole
+            @role('admin')
+            {
+                orderable:      false,
+                data: 'status',
+                render: function (data, type, row, meta) {
+                    let user = '{{ auth()->user()->id }}';
+                    var url = '{{ route('result.destroy', ":id") }}';
+                    url = url.replace(':id', data.id);
+                    if(data.confirm == 1){
+                        return 'Approved';
+                    }
+                    if(user == data.user_id){
+                        return '<form action="'+url+'" method="post" style="display: inline;" class="float-right" onclick="return confirm('+ "'Are you sure?'" + ')" >@csrf @method('DELETE')<input type="submit" value="Delete" class="btn btn-danger" ></form>';
+                    }else {
+                        return 'No Action';
+                    }
+                }
+            }
+            @endrole
         ],
         order: [[1, 'desc']]
     } );
