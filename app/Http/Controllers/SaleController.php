@@ -31,7 +31,6 @@ class SaleController extends Controller
     {
         $items = [];
         $update = [];
-        // dd($request->all());
         for ($i=0; $i < count($request->item); $i++) { 
             if (is_null($request->sale_id[$i])){
                 $items[$i]['item_id'] = $request->item[$i];
@@ -48,6 +47,10 @@ class SaleController extends Controller
                 $update[$i]['date'] = $request->date;
             }
         }
+        if(!count($update) && !count($items)){
+            return back()->with('warning','No Data Save!');;
+        }
+
         if(count($update)){
             foreach ($update as $value) {
                 $sale = Sale::find($value['id']);

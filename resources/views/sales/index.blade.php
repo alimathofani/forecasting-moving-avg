@@ -40,7 +40,7 @@
                                         <input type="hidden" class="sale_id-{{ $i }}" name="sale_id[]">
                                         <div class="form-group">
                                             <select class="form-control item items-{{ $i }}" id="items" name="item[]">
-                                                <option selected disabled>-- Select Item -- </option>
+                                                <option selected disabled value="0">-- Select Item -- </option>
                                                 @foreach ($items as $key => $value)
                                                     <option value="{{ $key }}">{{ $value }}</option>
                                                 @endforeach
@@ -123,6 +123,17 @@ $(document).ready(function() {
                 },
                 dataType:'JSON',
                 success:function(data){
+                    var count = '{{ $count }}';
+                    if(data.length == 0) {
+                        for (let index = 0; index < count; index++) {
+                            let keyReset = index + 1;
+                            $('select.items-' + keyReset).val(0);
+                            $('.prices-' + keyReset).val(null);
+                            $('.qtys-' + keyReset).val(0);
+                            $('.totals-' + keyReset).val(0);
+                            $('.sale_id-' + keyReset).val(null);
+                        }
+                    }
                     data.forEach((value, key) => {
                         let keyField = key + 1;
                         $('select.items-' + keyField).val(value.item.id);
