@@ -29,6 +29,7 @@ Route::group([
         Route::delete('/results/{group}/delete', 'ResultController@delete')->name('result.destroy');
         Route::get('/sales', 'SaleController@index')->name('sales.index');
         Route::post('/sales', 'SaleController@store')->name('sales.store');
+        Route::get('/sales/data', 'SaleController@data')->name('sales.data');
         Route::get('/sales/calculate', 'SaleController@calculate')->name('sales.calculate');
     }
 );

@@ -31,14 +31,15 @@
                                 </tr>
                             </thead>
                             <tbody class="input_fields_wrap">
-                                @for ($i=1; $i <= 6 ; $i++)
+                                @for ($i=1; $i <= $count ; $i++)
                                 <tr>
                                     <th scope="row">
                                         {{ $i }}
                                     </th>
                                     <th scope="row">
+                                        <input type="hidden" class="sale_id-{{ $i }}" name="sale_id[]">
                                         <div class="form-group">
-                                            <select class="form-control" id="items" name="item[]">
+                                            <select class="form-control item items-{{ $i }}" id="items" name="item[]">
                                                 <option selected disabled>-- Select Item -- </option>
                                                 @foreach ($items as $key => $value)
                                                     <option value="{{ $key }}">{{ $value }}</option>
@@ -47,13 +48,13 @@
                                         </div>
                                     </th>
                                     <th scope="row">
-                                        <input class="form-control price" type="number" name="price[]">
+                                        <input class="form-control price prices-{{ $i }}" type="number" name="price[]">
                                     </th>
                                     <th scope="row">
-                                        <input class="form-control qty" type="number" value="0" name="qty[]">
+                                        <input class="form-control qty qtys-{{ $i }}" type="number" value="0" name="qty[]">
                                     </th>
                                     <th scope="row">
-                                        <input class="form-control total" type="number" readonly value="0" name="total[]">
+                                        <input class="form-control total totals-{{ $i }}" type="number" readonly value="0" name="total[]">
                                     </th>
                                 </tr> 
                                 @endfor
@@ -103,6 +104,35 @@ $(document).ready(function() {
             if (!animationCompleted) {
                 dp.el.readOnly = false
             }
+        }
+    });
+    
+    $('[name=date]').focusout(function(){
+        var _this = $(this);
+        var value = _this.val();
+
+        if(value !== ''){
+            $.ajax({
+                type:'GET',
+                url:"{{ route('sales.data') }}",
+                data:{
+                    date: value
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                dataType:'JSON',
+                success:function(data){
+                    data.forEach((value, key) => {
+                        let keyField = key + 1;
+                        $('select.items-' + keyField).val(value.item.id);
+                        $('.prices-' + keyField).val(value.price);
+                        $('.qtys-' + keyField).val(value.qty);
+                        $('.totals-' + keyField).val(value.total);
+                        $('.sale_id-' + keyField).val(value.id);
+                    });
+                }
+            });
         }
     });
 });

@@ -78,12 +78,11 @@
                                     <div class="input-group-prepend">
                                         <div class="input-group-text periodeText">Bulan</div>
                                     </div>
-                                    <input type="text" min="1" class="form-control periodeField set-datepicker" required name="periode[]" {{-- value='{{ $sort++ }}' --}}>
+                                    <input type="text" min="1" class="form-control periodeField set-datepicker" required name="periode[]">
                                 </div>
                             </th>
                             <td colspan="2">
                                 <input type="number" min="1" class="form-control totalField" placeholder="Total" aria-label="Total" required name="total[]">
-                                {{-- value='{{ rand(400,500) }}' --}}
                             </td>
                         </tr> 
                         @endfor    
@@ -169,7 +168,6 @@
                     },
                     dataType:'JSON',
                     success:function(data){
-                        // data.total;
                         _this.parent().parent().siblings().children().val(data.total);
                     }
                 });
@@ -198,8 +196,6 @@
                         }
                     },
                     onSelect: function onSelect(fd, date) {
-                        // console.log(fd, date);
-                        // console.log($(this).parents().parents().parents().parents().parents());
                     }
                 });
             }else if(periode == "Tahun"){

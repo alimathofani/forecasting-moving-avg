@@ -20,21 +20,48 @@ class SaleController extends Controller
     public function index()
     {
         $items = Item::orderBy('id','ASC')->pluck('name', 'id');
-    	return view('sales.index', compact('items'));
+        $data = [
+            'count' => 6,
+            'items' => $items
+        ];
+    	return view('sales.index', $data);
     }
 
     public function store(Request $request)
     {
-        $items[] = [];
+        $items = [];
+        $update = [];
+        // dd($request->all());
         for ($i=0; $i < count($request->item); $i++) { 
-            $items[$i]['item_id'] = $request->item[$i];
-            $items[$i]['price'] = $request->price[$i];
-            $items[$i]['qty'] = $request->qty[$i];
-            $items[$i]['total'] = $request->total[$i];
-            $items[$i]['date'] = $request->date;
+            if (is_null($request->sale_id[$i])){
+                $items[$i]['item_id'] = $request->item[$i];
+                $items[$i]['price'] = $request->price[$i];
+                $items[$i]['qty'] = $request->qty[$i];
+                $items[$i]['total'] = $request->total[$i];
+                $items[$i]['date'] = $request->date;
+            }else{
+                $update[$i]['id'] = $request->sale_id[$i];
+                $update[$i]['item_id'] = $request->item[$i];
+                $update[$i]['price'] = $request->price[$i];
+                $update[$i]['qty'] = $request->qty[$i];
+                $update[$i]['total'] = $request->total[$i];
+                $update[$i]['date'] = $request->date;
+            }
         }
-
-    	Sale::insert($items);
+        if(count($update)){
+            foreach ($update as $value) {
+                $sale = Sale::find($value['id']);
+                $sale->item_id = $value['item_id'];
+                $sale->price = $value['price'];
+                $sale->qty = $value['qty'];
+                $sale->total = $value['total'];
+                $sale->date = $value['date'];
+                $sale->save();
+            }
+        }
+        if(count($items)){
+            Sale::insert($items);
+        }
 
     	return back()->with('success','Nota Created!');;
     }
@@ -60,6 +87,17 @@ class SaleController extends Controller
             'total' => $totalQty
         ];
 
+        return response()->json($data, 200);
+    }
+
+    public function data(Request $request)
+    {
+        $date = explode('-', $request->date);
+        $year = $date[0];
+        $month = date('m', strtotime($date[1]));
+        $day = $date[2];
+        $result = Sale::whereDay('date', $day)->whereMonth('date', $month)->whereYear('date', $year)->with('item')->get();
+        $data = $result;
         return response()->json($data, 200);
     }
 }
