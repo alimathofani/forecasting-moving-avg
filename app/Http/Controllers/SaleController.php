@@ -92,11 +92,8 @@ class SaleController extends Controller
 
     public function data(Request $request)
     {
-        $date = explode('-', $request->date);
-        $year = $date[0];
-        $month = date('m', strtotime($date[1]));
-        $day = $date[2];
-        $result = Sale::whereDay('date', $day)->whereMonth('date', $month)->whereYear('date', $year)->with('item')->get();
+        $date = $request->date;
+        $result = Sale::where('date', $date)->with('item')->get();
         $data = $result;
         return response()->json($data, 200);
     }
